@@ -4,6 +4,7 @@ from app.configurations import database
 from app.configurations import migrations
 from app.configurations import jwt_authentication
 from app import views
+from app.services.coins_list import coins
 
 def create_app():
     app = Flask(__name__)
