@@ -7,7 +7,8 @@ def init_app(app: Flask):
     db.init_app(app)
     app.db = db
     
-    # importar as models
-
-    # example:
-    # from app.models import modelBanana
+    from app.models.user_model import User
+    from app.models.portfolio_model import Portfolio
+    from app.models.transactions_model import Transaction
+    from app.models.accounting_model import Accounting
+    from app.models.ptax_model import Ptax
