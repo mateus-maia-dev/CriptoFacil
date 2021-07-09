@@ -12,3 +12,5 @@ def init_app(app: Flask):
     from app.models.transactions_model import Transaction
     from app.models.accounting_model import Accounting
     from app.models.ptax_model import Ptax
+    from app.models.coins_list_model import Coins_List
+
