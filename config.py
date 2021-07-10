@@ -1,6 +1,7 @@
 from environs import Env
 
 env = Env()
+env.read_env()
 
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
