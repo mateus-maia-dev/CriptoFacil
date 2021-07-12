@@ -16,4 +16,4 @@ class Portfolio(db.Model):
     user_id = Column(Integer, ForeignKey('user.id'))
     user_owner_portfolio = relationship("User", backref=backref("owner_portfolio"))
 
-    transaction = relationship("Transaction", backref=backref("transaction"))
+    transaction = relationship("Transaction", backref=backref("portfolio"))
