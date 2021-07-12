@@ -14,7 +14,7 @@ class User(db.Model):
     email = Column(String(255), nullable=False, unique=True)
     password_hash = Column(String(511), nullable=False)
 
-    portfolio = relationship("Portfolio", backref=backref("user"))
+    # portfolio = relationship("Portfolio", backref=backref("user"))
 
     @property
     def password(self):

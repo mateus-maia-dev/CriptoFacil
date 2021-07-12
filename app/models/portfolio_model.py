@@ -14,5 +14,6 @@ class Portfolio(db.Model):
     net_quantity = Column(String, nullable=False)
 
     user_id = Column(Integer, ForeignKey('user.id'))
+    user_owner_portfolio = relationship("User", backref=backref("owner_portfolio"))
 
     transaction = relationship("Transaction", backref=backref("portfolio"))

@@ -12,8 +12,8 @@ def create_app():
     configurations.init_app(app)
     database.init_app(app)
     migrations.init_app(app)
-    views.init_app(app)
     jwt_authentication.init_app(app)
+    views.init_app(app)
 
     return app
     
