@@ -16,6 +16,6 @@ class Transaction(db.Model):
     quantity = Column(String, nullable=False)
     brazilian_exch = Column(String, nullable=False)
 
-    portfolio_id = Column(Integer, ForeignKey('portfolio.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
 
-    accounting = relationship("Transaction", backref=backref("accounting"))
+    # accounting = relationship("Transaction", backref=backref("accounting"))
