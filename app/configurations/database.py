@@ -8,7 +8,6 @@ def init_app(app: Flask):
     app.db = db
     
     from app.models.user_model import User
-    from app.models.portfolio_model import Portfolio
     from app.models.transactions_model import Transaction
     from app.models.accounting_model import Accounting
     from app.models.ptax_model import Ptax

@@ -1,6 +1,5 @@
 from app.configurations.database import db
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship, backref
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -14,7 +13,6 @@ class User(db.Model):
     email = Column(String(255), nullable=False, unique=True)
     password_hash = Column(String(511), nullable=False)
 
-    # portfolio = relationship("Portfolio", backref=backref("user"))
 
     @property
     def password(self):
@@ -27,6 +25,5 @@ class User(db.Model):
     def verify_password(self, password_to_compare):
         return check_password_hash(self.password_hash, password_to_compare)
 
-    @property
     def serialized(self):
         return {"id": self.id, "Nome": self.name, "Sobrenome": self.last_name, "email": self.email}
