@@ -18,4 +18,4 @@ class Transaction(db.Model):
 
     portfolio_id = Column(Integer, ForeignKey('portfolio.id'))
 
-    accounting = relationship("Transaction", backref=backref("accounting"))
+    accounting = relationship("Accounting", backref=backref("transaction"))

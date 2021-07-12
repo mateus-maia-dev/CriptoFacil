@@ -1,7 +1,7 @@
 from flask import Flask
 
-
 def init_app(app: Flask):
-    # registrar as blueprints
-    ...
+    
+    from app.views.register_user_views import user
+    app.register_blueprint(user)
     
