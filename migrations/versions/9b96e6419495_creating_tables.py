@@ -1,8 +1,8 @@
 """creating tables
 
-Revision ID: ade922362f37
+Revision ID: 9b96e6419495
 Revises: 
-Create Date: 2021-07-12 13:46:57.004834
+Create Date: 2021-07-13 13:54:41.432326
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ade922362f37'
+revision = '9b96e6419495'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -60,10 +60,9 @@ def upgrade():
     op.create_table('accounting',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('date', sa.Date(), nullable=False),
-    sa.Column('sell_total', sa.String(), nullable=False),
-    sa.Column('profit', sa.String(), nullable=False),
-    sa.Column('tax', sa.String(), nullable=False),
-    sa.Column('foreign_exch', sa.String(), nullable=False),
+    sa.Column('sell_total', sa.Float(), nullable=False),
+    sa.Column('profit', sa.Float(), nullable=False),
+    sa.Column('foreign_exch_total', sa.Float(), nullable=False),
     sa.Column('transaction_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['transaction_id'], ['transaction.id'], ),
     sa.PrimaryKeyConstraint('id')
