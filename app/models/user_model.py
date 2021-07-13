@@ -1,6 +1,5 @@
 from app.configurations.database import db
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship, backref
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -14,6 +13,10 @@ class User(db.Model):
     email = Column(String(255), nullable=False, unique=True)
     password_hash = Column(String(511), nullable=False)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
     @property
     def password(self):
         raise AttributeError("Password cannot be accessed!")
@@ -25,7 +28,6 @@ class User(db.Model):
     def verify_password(self, password_to_compare):
         return check_password_hash(self.password_hash, password_to_compare)
 
-    @property
     def serialized(self):
         return {
             "id": self.id,

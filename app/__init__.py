@@ -11,8 +11,12 @@ def create_app():
     configurations.init_app(app)
     database.init_app(app)
     migrations.init_app(app)
+<<<<<<< HEAD
     views.init_app(app)
     api.init_app(app)
+=======
+>>>>>>> develop
     jwt_authentication.init_app(app)
+    views.init_app(app)
 
     return app
