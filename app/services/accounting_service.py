@@ -15,10 +15,10 @@ def populate_accounting(user_id):
     transaction_id = transaction.id
     sell_total = 0
     profit = 0
-    foreign_exch = 0
+    foreign_exch_total = 0
 
-    if transaction.foreign_exch:
-        foreign_exch = price_brl * transaction.quantity
+    if transaction.foreign_exch_total:
+        foreign_exch_total = price_brl * transaction.quantity
 
     if transaction.type == 'sell' or transaction.type == 'input':
         sell_total = price_brl * transaction.quantity
@@ -26,7 +26,7 @@ def populate_accounting(user_id):
             transaction.quantity if price_brl - transaction.avg_price_brl > 0 else 0
 
     new_accounting = Accounting(date=date, sell_total=sell_total, profit=profit,
-                                tax=0, foreign_exch=foreign_exch, transaction_id=transaction_id)
+                                foreign_exch_total=foreign_exch_total, transaction_id=transaction_id)
 
     session.add(new_accounting)
     session.commit()
