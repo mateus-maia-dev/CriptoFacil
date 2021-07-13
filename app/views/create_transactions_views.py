@@ -1,6 +1,7 @@
 from flask import Blueprint, request, current_app, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.transactions_model import Transaction
+from app.services import populate_accounting
 from http import HTTPStatus
 
 
@@ -60,5 +61,7 @@ def create_user():
 
     session.add(new_transaction)
     session.commit()
+
+    populate_accounting(user_id)
 
     return new_transaction.serialized(), HTTPStatus.CREATED
