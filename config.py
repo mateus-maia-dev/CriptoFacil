@@ -14,7 +14,8 @@ class ConfigDevelopment(Config):
 
 
 class ConfigProduction(Config):
-    ...
+    SQLALCHEMY_DATABASE_URI = env("URI_DEV_DB")
+    JWT_SECRET_KEY = env("JWT_SECRET_KEY")
 
 
 class ConfigTest(Config):
