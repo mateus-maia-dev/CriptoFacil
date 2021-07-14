@@ -3,6 +3,9 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.transactions_model import Transaction
 from app.services import populate_accounting
 from http import HTTPStatus
+from app.models.transactions_model import Transaction
+from app.models.accounting_model import Accounting
+from ipdb import set_trace
 
 
 transactions = Blueprint("transactions", __name__, url_prefix="/api")
@@ -10,8 +13,9 @@ transactions = Blueprint("transactions", __name__, url_prefix="/api")
 
 @transactions.route("/transactions/register", methods=["POST"])
 @jwt_required()
-def create_user():
+def create_transactions():
     session = current_app.db.session
+
     body = request.get_json()
     user_id = get_jwt_identity()
 
