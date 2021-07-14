@@ -1,14 +1,15 @@
 import requests
 from datetime import date, datetime
 
-##Função que deve ser usada na View -> get_data()
+# Função que deve ser usada na View -> get_data()
+
 
 def request_value_dolar(last_price_date):
     return requests.get(
         f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{last_price_date}'&$top=100&$format=json"
     )
 
-        
+
 def get_valid_date(sub_day, used_date):
     str_year = str(used_date).split("-")[0]
     str_mouth = str(used_date).split("-")[1]
@@ -22,7 +23,7 @@ def get_valid_date(sub_day, used_date):
     api_response = api_bcb.json()["value"]
 
     sell_rate = api_response[0]['cotacaoVenda']
-    new_ptax = {"date":date_output, "sell_rate":str(sell_rate)}
+    new_ptax = {"date": date_output, "sell_rate": str(sell_rate)}
     return new_ptax
 
 
@@ -50,13 +51,13 @@ def get_data(date_input):
 
     input_from_user_fix = fix_date(date_input)
     last_price_date = get_date()
-    
+
     api_bcb = request_value_dolar(input_from_user_fix)
 
     if day_of_date_input.isoweekday() == 7:
         valid_date = get_valid_date(2, date_input)
         return valid_date
-    
+
     if day_of_date_input.isoweekday() == 6:
         valid_date = get_valid_date(1, date_input)
         return valid_date
@@ -77,7 +78,7 @@ def get_data(date_input):
         valid_date = get_valid_date(1, date_input)
         return valid_date
 
-    new_ptax = {"date":last_price_date, "sell_rate":str(sell_rate)}
+    new_ptax = {"date": input_from_user_fix, "sell_rate": str(sell_rate)}
     return new_ptax
 
 

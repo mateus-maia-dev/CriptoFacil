@@ -7,7 +7,7 @@ from .mock_data import tax_table
 from flask_jwt_extended import get_jwt_identity
 
 
-def populate_accounting(user_id):
+def populate_accounting(user_id, ptax):
     session = current_app.db.session
 
     transaction: Transaction = (
@@ -19,7 +19,7 @@ def populate_accounting(user_id):
     price_brl = (
         transaction.price_per_coin
         if transaction.fiat == 'brl'
-        else transaction.price_per_coin * 5
+        else transaction.price_per_coin * ptax
     )
 
     date = transaction.date
