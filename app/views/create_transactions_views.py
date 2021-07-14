@@ -86,3 +86,39 @@ def create_transaction():
     populate_accounting(user_id, ptax)
 
     return new_transaction.serialized(), HTTPStatus.CREATED
+
+
+@transactions.route("/transactions/<int:transaction_id>", methods=["PUT"])
+@jwt_required()
+def update_transaction(transaction_id):
+    user_id = get_jwt_identity()
+    session = current_app.db.session
+    data = request.get_json()
+    
+    data_to_update: Transaction = Transaction.query.filter_by(
+        user_id=user_id, id=transaction_id
+        ).first()
+
+    for key, value in data.items():
+        setattr(data_to_update, key, value)
+
+    session.add(data_to_update)
+    session.commit()
+
+    return data_to_update.serialized(), HTTPStatus.OK
+
+
+@transactions.route("/transactions/<int:transaction_id>", methods=["DELETE"])
+@jwt_required()
+def delete_transaction(transaction_id):
+    user_id = get_jwt_identity()
+    session = current_app.db.session
+
+    data_to_delete: Transaction = Transaction.query.filter_by(
+        user_id=user_id, id=transaction_id
+        ).first()
+
+    session.delete(data_to_delete)
+    session.commit()
+
+    return "", HTTPStatus.NO_CONTENT
