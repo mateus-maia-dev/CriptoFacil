@@ -13,10 +13,6 @@ class User(db.Model):
     email = Column(String(255), nullable=False, unique=True)
     password_hash = Column(String(511), nullable=False)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
     @property
     def password(self):
         raise AttributeError("Password cannot be accessed!")

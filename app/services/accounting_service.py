@@ -1,6 +1,10 @@
 from flask import current_app
 from app.models.transactions_model import Transaction
 from app.models.accounting_model import Accounting
+from datetime import datetime, time
+from ipdb import set_trace
+from .mock_data import tax_table
+from flask_jwt_extended import get_jwt_identity
 
 
 def populate_accounting(user_id):
@@ -45,3 +49,31 @@ def populate_accounting(user_id):
 
     session.add(new_accounting)
     session.commit()
+
+
+def get_accounting():
+    session = current_app.db.session
+
+    user_id = get_jwt_identity()
+
+    aux_var = (
+        session.query(Transaction, Accounting)
+        .join(Transaction, Transaction.id == Accounting.transaction_id)
+        .filter(Transaction.user_id == user_id)
+        .all()
+    )
+
+    user_accountings_list = [account[1] for account in aux_var]
+
+    # Return tax
+
+    for account in user_accountings_list:
+        month = account.date.strftime('%b')
+
+        tax_table[month]['sell_total'] += account.sell_total
+        tax_table[month]['profit'] += account.profit
+
+        if tax_table[month]['sell_total'] > 30000:
+            tax_table[month]['tax'] = tax_table[month]['profit'] * 0.3
+
+    return tax_table

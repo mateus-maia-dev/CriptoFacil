@@ -1,14 +1,8 @@
-"""creating tables
+"""empty message
 
-<<<<<<< HEAD:migrations/versions/2c24d6171390_creating_tables.py
-Revision ID: 2c24d6171390
+Revision ID: 78a2700ab92e
 Revises: 
-Create Date: 2021-07-11 20:49:56.412546
-=======
-Revision ID: 9b96e6419495
-Revises: 
-Create Date: 2021-07-13 13:54:41.432326
->>>>>>> develop:migrations/versions/9b96e6419495_creating_tables.py
+Create Date: 2021-07-13 17:37:41.805598
 
 """
 from alembic import op
@@ -16,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<< HEAD:migrations/versions/2c24d6171390_creating_tables.py
-revision = '2c24d6171390'
-=======
-revision = '9b96e6419495'
->>>>>>> develop:migrations/versions/9b96e6419495_creating_tables.py
+revision = '78a2700ab92e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -57,12 +47,6 @@ def upgrade():
     sa.Column('type', sa.String(), nullable=False),
     sa.Column('coin', sa.String(), nullable=False),
     sa.Column('fiat', sa.String(), nullable=False),
-<<<<<<< HEAD:migrations/versions/2c24d6171390_creating_tables.py
-    sa.Column('price_per_coin', sa.String(), nullable=False),
-    sa.Column('quantity', sa.String(), nullable=False),
-    sa.Column('brazilian_exch', sa.String(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-=======
     sa.Column('price_per_coin', sa.Float(), nullable=False),
     sa.Column('avg_price_brl', sa.Float(), nullable=False),
     sa.Column('avg_price_usd', sa.Float(), nullable=False),
@@ -70,7 +54,6 @@ def upgrade():
     sa.Column('quantity', sa.Float(), nullable=False),
     sa.Column('foreign_exch', sa.Boolean(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
->>>>>>> develop:migrations/versions/9b96e6419495_creating_tables.py
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

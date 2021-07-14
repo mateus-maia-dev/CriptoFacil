@@ -19,16 +19,23 @@ class Transaction(db.Model):
     quantity = Column(Float, nullable=False)
     foreign_exch = Column(Boolean, nullable=False)
 
-<<<<<<< HEAD
-    user_id = Column(Integer, ForeignKey('user.id'))
-
-    # accounting = relationship("Transaction", backref=backref("accounting"))
-=======
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
 
-    accounting = relationship("Accounting", uselist=False, backref=backref("transaction"))
+    accounting = relationship(
+        "Accounting", uselist=False, backref=backref("transaction")
+    )
 
     def serialized(self):
-        return {"id": self.id, "date": self.date, "type": self.type, "coin": self.coin, "fiat": self.fiat, "price_per_coin": self.price_per_coin, "avg_price_brl": self.avg_price_brl, "avg_price_usd": self.avg_price_usd, "net_quantity": self.net_quantity, "quantity": self.quantity, "foreign_exch": self.foreign_exch}
-    
->>>>>>> develop
+        return {
+            "id": self.id,
+            "date": self.date,
+            "type": self.type,
+            "coin": self.coin,
+            "fiat": self.fiat,
+            "price_per_coin": self.price_per_coin,
+            "avg_price_brl": self.avg_price_brl,
+            "avg_price_usd": self.avg_price_usd,
+            "net_quantity": self.net_quantity,
+            "quantity": self.quantity,
+            "foreign_exch": self.foreign_exch,
+        }
