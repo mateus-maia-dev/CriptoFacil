@@ -10,7 +10,7 @@ transactions = Blueprint("transactions", __name__, url_prefix="/api")
 
 @transactions.route("/transactions/register", methods=["POST"])
 @jwt_required()
-def create_user():
+def create_transactions():
     session = current_app.db.session
     body = request.get_json()
     user_id = get_jwt_identity()
