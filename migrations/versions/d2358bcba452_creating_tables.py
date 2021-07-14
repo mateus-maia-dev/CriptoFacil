@@ -1,8 +1,8 @@
-"""empty message
+"""creating tables
 
-Revision ID: f422b8b737b2
+Revision ID: d2358bcba452
 Revises: 
-Create Date: 2021-07-14 16:02:58.209197
+Create Date: 2021-07-14 18:03:36.455955
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f422b8b737b2'
+revision = 'd2358bcba452'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -31,12 +31,6 @@ def upgrade():
     sa.Column('symbol', sa.String(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('image', sa.String(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('ptax',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('data', sa.Date(), nullable=False),
-    sa.Column('sell_rate', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -82,7 +76,6 @@ def downgrade():
     op.drop_table('accounting')
     op.drop_table('transaction')
     op.drop_table('user')
-    op.drop_table('ptax')
     op.drop_table('coins_list')
     op.drop_table('coins_historical')
     # ### end Alembic commands ###
