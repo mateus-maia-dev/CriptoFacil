@@ -65,15 +65,35 @@ def get_accounting():
 
     user_accountings_list = [account[1] for account in aux_var]
 
-    # Return tax
+    # Return tax_table
 
     for account in user_accountings_list:
         month = account.date.strftime('%b')
+        year = account.date.strftime('%Y')
 
         tax_table[month]['sell_total'] += account.sell_total
         tax_table[month]['profit'] += account.profit
 
-        if tax_table[month]['sell_total'] > 30000:
-            tax_table[month]['tax'] = tax_table[month]['profit'] * 0.3
+        # fill the fields foreign_exch_total, status from accounting_table
+        tax_table[month]['foreign_exch_total'] += account.foreign_exch_total
+        if tax_table[month]['foreign_exch_total'] > 30000:
+            tax_table[month]['status'] = "NÃO ISENTO"
+
+        # fill the fields sell_total, profit, and tax from accounting_table
+        if tax_table[month]['sell_total'] > 35000:
+            if tax_table[month]['profit'] < 5000000:
+                tax_table[month]['tax'] = tax_table[month]['profit'] * 0.15
+            if (
+                tax_table[month]['profit'] > 5000000
+                and tax_table[month]['profit'] < 10000000
+            ):
+                tax_table[month]['tax'] = tax_table[month]['profit'] * 0.175
+            if (
+                tax_table[month]['profit'] > 10000000
+                and tax_table[month]['profit'] < 30000000
+            ):
+                tax_table[month]['tax'] = tax_table[month]['profit'] * 0.2
+            if tax_table[month]['profit'] > 30000000:
+                tax_table[month]['tax'] = tax_table[month]['profit'] * 0.225
 
     return tax_table
