@@ -7,6 +7,7 @@ This app will show all the cryptocurrencies that you own, show the evolution of 
 ## Como executar
 
 Para executar esse arquivo, você deve:
-* Criar um `virtualenv`
+* Criar um virtualenv `python -m venv venv`
+* inicializar o virtualenv `source venv/bin/activate`
 * instalar os pacotes com o pip a partir do arquivo `requirements.txt`
 * rodar o software utilizando o comando `flask run`
