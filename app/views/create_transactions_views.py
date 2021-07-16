@@ -31,7 +31,7 @@ def create_transaction():
 
     transactions = (
         Transaction.query.filter_by(coin=body["coin"], user_id=user_id)
-        .order_by(Transaction.date.asc())
+        .order_by(Transaction.date.asc(), Transaction.id.asc())
         .all()
     )
 
@@ -99,9 +99,68 @@ def update_transaction(transaction_id):
         user_id=user_id, id=transaction_id
         ).first()
 
+    if data_to_update == None:
+        return "Essa Transação não existe", HTTPStatus.NOT_FOUND
+
+    date_dollar = str(data_to_update.date)
+    get_ptax = get_data(date_dollar)
+    ptax = float(get_ptax['sell_rate'])
+
+    fiat = data_to_update.fiat
+    price_per_coin = data_to_update.price_per_coin
+
+    price_usd = price_per_coin if fiat == 'usd' else price_per_coin / ptax
+    price_brl = price_per_coin if fiat == 'brl' else price_per_coin * ptax
+
     for key, value in data.items():
         setattr(data_to_update, key, value)
 
+    new_dict = {
+        "avg_price_brl": data_to_update.avg_price_brl,
+        "avg_price_usd": data_to_update.avg_price_brl,
+        "price_per_coin": data_to_update.price_per_coin,
+        "quantity": data_to_update.quantity,
+        "net_quantity": data_to_update.net_quantity
+    }
+
+    transactions: Transaction = (
+        Transaction.query.filter_by(coin=data["coin"], user_id=user_id)
+        .order_by(Transaction.date.asc())
+        .all()
+    )
+
+    for item in transactions:
+        if data_to_update.type == 'buy' or data_to_update.type == 'output':
+            net_quantity = new_dict["net_quantity"]
+            avg_price_brl = new_dict["avg_price_brl"]
+            avg_price_usd = new_dict["avg_price_usd"]
+
+            item.net_quantity += new_dict["quantity"]
+
+            avg_price_brl = (
+                price_brl * item.quantity + avg_price_brl *
+                (net_quantity - item.quantity)
+            ) / item.net_quantity
+            avg_price_usd = (
+                price_usd * item.quantity + avg_price_usd *
+                (item.net_quantity - item.quantity)
+            ) / item.net_quantity
+
+            item.avg_price_brl = avg_price_brl
+            item.avg_price_usd = avg_price_usd
+        
+        if data_to_update.type == 'sell' or data_to_update.type == 'input':
+            net_quantity = new_dict["net_quantity"]
+            avg_price_brl = new_dict["avg_price_brl"]
+            avg_price_usd = new_dict["avg_price_usd"]
+
+            item.net_quantity -= new_dict["quantity"]
+
+        for key, value in new_dict.items():
+            setattr(item, key, value)
+
+        session.add(item)
+        
     session.add(data_to_update)
     session.commit()
 
