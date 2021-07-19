@@ -21,7 +21,7 @@ def list_portfolio():
     list_name_coin = list(set(list_dict_transaction_user))
 
     for name in list_name_coin:
-        list_Transaction_coin = Transaction.query.filter_by(coin=name).all()
+        list_Transaction_coin = Transaction.query.filter_by(coin=name, user_id=user_id).all()
         list_data_coin_end.append(list_Transaction_coin[-1])
 
     list_coin_data_user = list()
