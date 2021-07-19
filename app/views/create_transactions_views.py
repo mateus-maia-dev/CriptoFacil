@@ -4,6 +4,7 @@ from app.models.transactions_model import Transaction
 from app.services import populate_accounting, get_data
 from http import HTTPStatus
 
+import ipdb
 
 transactions = Blueprint("transactions", __name__, url_prefix="/api")
 
@@ -35,6 +36,7 @@ def create_transaction():
         .all()
     )
 
+    ipdb.set_trace()
     if not transactions:
         avg_price_brl = price_brl
         avg_price_usd = price_usd
@@ -94,10 +96,10 @@ def update_transaction(transaction_id):
     user_id = get_jwt_identity()
     session = current_app.db.session
     data = request.get_json()
-    
+
     data_to_update: Transaction = Transaction.query.filter_by(
         user_id=user_id, id=transaction_id
-        ).first()
+    ).first()
 
     for key, value in data.items():
         setattr(data_to_update, key, value)
@@ -116,7 +118,7 @@ def delete_transaction(transaction_id):
 
     data_to_delete: Transaction = Transaction.query.filter_by(
         user_id=user_id, id=transaction_id
-        ).first()
+    ).first()
 
     session.delete(data_to_delete)
     session.commit()
