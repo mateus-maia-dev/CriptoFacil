@@ -1,5 +1,4 @@
-from flask import Flask, current_app
-import jwt
+from flask import current_app
 from ipdb import set_trace
 
 
@@ -8,8 +7,35 @@ def init_app(model) -> None:
     current_app.db.session.commit()
 
 
-def get_user(token):
+def verify_received_keys_from_create_transactions(body: dict):
+    required_fields = [
+        'date',
+        'type',
+        'coin',
+        'fiat',
+        'price_per_coin',
+        'quantity',
+        'foreign_exch',
+    ]
 
-    decoded = jwt.decode(token, "super secret key", algorithms=["HS256"])
+    keys = body.keys()
 
-    return decoded['sub']
+    missing_fields = [key for key in required_fields if key not in keys]
+    set_trace()
+    if missing_fields:
+        raise KeyError(
+            {
+                "error": {
+                    "required_field": required_fields,
+                    "missing_fields": list(missing_fields),
+                }
+            }
+        )
+
+
+def verify_received_keys_from_create_user():
+    ...
+
+
+def verify_received_keys_from_login():
+    ...
