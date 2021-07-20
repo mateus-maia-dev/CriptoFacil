@@ -2,6 +2,7 @@ from app.models.user_model import User
 from flask_jwt_extended import create_access_token
 from datetime import timedelta
 from http import HTTPStatus
+from sqlalchemy.exc import IntegrityError
 
 
 def create(body: dict, session):
@@ -37,4 +38,4 @@ def login(body: dict):
         identity=user_data.id, expires_delta=timedelta(days=7)
     )
 
-    return {"token": access_token}
+    return {"token": access_token}, HTTPStatus.OK

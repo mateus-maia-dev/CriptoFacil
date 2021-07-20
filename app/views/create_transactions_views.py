@@ -4,7 +4,10 @@ from app.models.transactions_model import Transaction
 
 
 from http import HTTPStatus
-from app.services.helper import verify_received_keys_from_create_transactions
+from app.services.helper import (
+    verify_received_keys_from_create_transactions,
+    validated_values_for_register_transaction,
+)
 from app.services.transactions_service import create
 
 
@@ -20,11 +23,14 @@ def create_transaction():
 
     try:
         verify_received_keys_from_create_transactions(body)
+        validated_values_for_register_transaction(body)
 
         return create(body, user_id), HTTPStatus.CREATED
 
     except KeyError as e:
-        return e.args[0]
+        return e.args[0], HTTPStatus.BAD_REQUEST
+    except Exception as e:
+        return e.args[0], HTTPStatus.BAD_REQUEST
 
 
 @transactions.route("/transactions/<int:transaction_id>", methods=["PUT"])
