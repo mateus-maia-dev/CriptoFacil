@@ -1,5 +1,5 @@
 from app.models.transactions_model import Transaction
-from app.services import populate_accounting, get_data
+from app.services import get_data
 from flask import current_app
 
 from app.services.current_dollar_value import get_data
@@ -75,14 +75,10 @@ def create(body: dict, user_id: int):
     session.add(new_transaction)
     session.commit()
 
-    populate_accounting(user_id, ptax)
-
     return new_transaction.serialized()
 
 
 def get_transations(transactions):
-    net_transactions = dict()
-    transactions_list = list()
     transactions_per_coin = dict()
 
     coins_list = [coin.coin for coin in transactions]
@@ -91,8 +87,7 @@ def get_transations(transactions):
 
     for coin in user_coins:
         coin_transactions = [
-            transaction for transaction in transactions if transaction.coin == coin
-        ]
+            transaction for transaction in transactions if transaction.coin == coin]
 
         transactions_per_coin[coin] = list()
 
@@ -105,27 +100,19 @@ def get_transations(transactions):
             get_ptax_str = get_data(get_ptax)
             ptax = float(get_ptax_str['sell_rate'])
 
-            price_usd = (
-                item.price_per_coin
-                if item.fiat == 'usd'
-                else item.price_per_coin / ptax
-            )
-            price_brl = (
-                item.price_per_coin
-                if item.fiat == 'brl'
-                else item.price_per_coin * ptax
-            )
+            price_usd = item.price_per_coin if item.fiat == 'usd' else item.price_per_coin / ptax
+            price_brl = item.price_per_coin if item.fiat == 'brl' else item.price_per_coin * ptax
 
             if item.type == 'buy' or item.type == 'output':
                 net_quantity += item.quantity
 
                 avg_price_brl = (
-                    price_brl * item.quantity
-                    + avg_price_brl * (net_quantity - item.quantity)
+                    price_brl * item.quantity + avg_price_brl *
+                    (net_quantity - item.quantity)
                 ) / net_quantity
                 avg_price_usd = (
-                    price_usd * item.quantity
-                    + avg_price_usd * (net_quantity - item.quantity)
+                    price_usd * item.quantity + avg_price_usd *
+                    (net_quantity - item.quantity)
                 ) / net_quantity
 
             if item.type == 'sell' or item.type == 'input':
@@ -134,6 +121,7 @@ def get_transations(transactions):
                 net_quantity = result["net_quantity"] - item.quantity
 
             result = {
+                "id": item.id,
                 "date": item.date,
                 "type": item.type,
                 "coin": item.coin,
@@ -144,57 +132,9 @@ def get_transations(transactions):
                 "avg_price_brl": round(avg_price_brl, 2),
                 "avg_price_usd": round(avg_price_usd, 2),
                 "foreign_exch": item.foreign_exch,
+                "ptax": ptax
             }
 
             transactions_per_coin[coin].append(result)
 
-    # print('transactions_per_coin', transactions_per_coin)
-    resultado = list()
-    resultado.append(transactions_per_coin)
-    print(resultado)
-
-    return resultado
-
-
-def get_accounting(transactions):
-    accounting = dict()
-    accounting_list = list()
-
-    sell_total = 0
-    profit = 0
-    foreign_exch_total = 0
-
-    for item in transactions:
-        get_ptax = str(item.date)
-        get_ptax_str = get_data(get_ptax)
-        ptax = float(get_ptax_str['sell_rate'])
-
-        date = item.date
-        transaction_id = item.id
-
-        price_brl = (
-            item.price_per_coin if item.fiat == 'brl' else item.price_per_coin * ptax
-        )
-
-        if item.foreign_exch:
-            foreign_exch_total = price_brl * item.quantity
-
-        if item.type == 'sell' or item.type == 'input':
-            sell_total = price_brl * item.quantity
-            profit = (
-                (price_brl - item.avg_price_brl) * item.quantity
-                if price_brl - item.avg_price_brl > 0
-                else 0
-            )
-
-        accounting = {
-            "date": date,
-            "transaction_id": transaction_id,
-            "sell_total": sell_total,
-            "profit": profit,
-            "foreign_exch_total": foreign_exch_total,
-        }
-
-        accounting_list.append(accounting)
-
-    return accounting_list
+    return transactions_per_coin
