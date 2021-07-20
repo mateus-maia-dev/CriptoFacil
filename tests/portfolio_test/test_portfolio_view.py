@@ -1,4 +1,5 @@
 from flask.testing import FlaskClient
+from ipdb import set_trace
 
 
 def test_should_retrieve_a_portfolio_with_transactions(

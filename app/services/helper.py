@@ -56,13 +56,10 @@ def validated_values_for_register_user(body: dict):
     name = body.get("name")
     last_name = body.get("last_name")
     email = body.get("email")
-    password = body.get("password")
 
     email_pattern = r"[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+"
     name_pattern = r"^[a-z-A-Z]{3,15}$"
-    password_pattern = (
-        r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$"
-    )
+
     # set_trace()
 
     if not bool(re.match(email_pattern, email)):
@@ -73,13 +70,6 @@ def validated_values_for_register_user(body: dict):
 
     if not bool(re.match(name_pattern, last_name)):
         raise Exception({"error": "invalid value on last_name's field"})
-
-    if not bool(re.match(password_pattern, password)):
-        raise Exception(
-            {
-                "error": "password must contain at least 1 capital letter, a special character and a number."
-            }
-        )
 
 
 def validated_values_for_login(body: dict):
