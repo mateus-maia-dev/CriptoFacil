@@ -1,6 +1,6 @@
-from flask import Flask
-import pytest
 from app import create_app
+import pytest
+from faker import Faker
 
 # uso as fixture pra reutilizar códigos
 @pytest.fixture
@@ -9,6 +9,19 @@ def sample_app():
     yield create_app()
     # yield vai criar uma instancia de app, e vai retornar a instancia
     # para todos os apps
+
+
+@pytest.fixture(
+    scope="module"
+)  # scope para caso eu queira manter o mesmo objeto para todos os testes no modulo. O módulo é o conftest
+def new_user():
+    fake = Faker(["pt_BR"])
+    yield {
+        "name": fake.first_name(),
+        "last_name": fake.last_name(),
+        "email": fake.email(),
+        "password": fake.password(),
+    }
 
 
 @pytest.fixture

@@ -1,29 +1,4 @@
 from flask.testing import FlaskClient
-import pytest
-from ipdb import set_trace
-
-
-@pytest.fixture
-def new_user():
-    yield {
-        "name": "Maria",
-        "last_name": "Joana",
-        "email": "maria@mail.com",
-        "password": "1234",
-    }
-
-
-@pytest.fixture
-def new_transaction():
-    yield {
-        "date": "2021-01-06",
-        "type": "buy",
-        "coin": "bitcoin",
-        "fiat": "brl",
-        "price_per_coin": 100000,
-        "quantity": 2,
-        "foreign_exch": True,
-    }
 
 
 def test_should_retrieve_a_portfolio_with_transactions(
@@ -34,13 +9,11 @@ def test_should_retrieve_a_portfolio_with_transactions(
     token = user.get_json()['token']
     headers = {'Authorization': f'Bearer {token}'}
 
-    transaction = app_client.post(
-        '/api/transactions/register', json=new_transaction, headers=headers
-    )
+    app_client.post('/api/transactions/register', json=new_transaction, headers=headers)
     portfolio = app_client.get('/api/portfolio/list', headers=headers)
 
     assert portfolio.status_code == 200
-    assert type(portfolio.get_json()) == list
+    assert isinstance(portfolio.get_json(), list)
     # colocar outros testes, se necessários
 
 

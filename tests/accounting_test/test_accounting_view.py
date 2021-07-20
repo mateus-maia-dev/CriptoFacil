@@ -4,16 +4,6 @@ import pytest
 from flask.testing import FlaskClient
 
 
-@pytest.fixture
-def new_user():
-    yield {
-        "name": "Maria",
-        "last_name": "Joana",
-        "email": "maria@mail.com",
-        "password": "1234",
-    }
-
-
 def test_should_return_an_accounting(app_client: FlaskClient, new_user):
     user = app_client.post('/api/register', json=new_user)
 
