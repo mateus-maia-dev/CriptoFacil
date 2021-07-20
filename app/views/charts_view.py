@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.transactions_model import Transaction
 from app.models.coins_historical_quotes_model import CoinsHistorical
-from app.services.transaction_service import get_transations
+from app.services.transactions_service import get_transations
 from http import HTTPStatus
 import datetime
 
@@ -20,13 +20,24 @@ def data_graphic():
         Transaction.query.filter_by(user_id=user_id)
         .order_by(Transaction.date.asc())
         .all()
-
     )
 
     today = datetime.datetime.today()
     current_month = today.month
-    month_list = ['jan', 'fev', 'mar', 'abr', 'mai',
-                  'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dec']
+    month_list = [
+        'jan',
+        'fev',
+        'mar',
+        'abr',
+        'mai',
+        'jun',
+        'jul',
+        'ago',
+        'sep',
+        'oct',
+        'nov',
+        'dec',
+    ]
 
     transactions_list = get_transations(transactions)
 
@@ -39,32 +50,71 @@ def data_graphic():
     for coin in user_coins:
 
         coin_transactions = [
-            transaction for transaction in transactions_list if transaction['coin'] == coin]
+            transaction
+            for transaction in transactions_list
+            if transaction['coin'] == coin
+        ]
 
         jan = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 1]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 1
+        ]
         fev = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 2]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 2
+        ]
         mar = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 3]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 3
+        ]
         abr = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 4]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 4
+        ]
         mai = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 5]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 5
+        ]
         jun = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 6]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 6
+        ]
         jul = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 7]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 7
+        ]
         ago = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 8]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 8
+        ]
         sep = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 9]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 9
+        ]
         oct = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 10]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 10
+        ]
         nov = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 11]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 11
+        ]
         dec = [
-            transaction for transaction in coin_transactions if transaction['date'].month == 12]
+            transaction
+            for transaction in coin_transactions
+            if transaction['date'].month == 12
+        ]
 
         qty_list = [
             jan[-1]['net_quantity'] if jan else 0,
@@ -78,7 +128,7 @@ def data_graphic():
             sep[-1]['net_quantity'] if sep else 0,
             oct[-1]['net_quantity'] if oct else 0,
             nov[-1]['net_quantity'] if nov else 0,
-            dec[-1]['net_quantity'] if dec else 0
+            dec[-1]['net_quantity'] if dec else 0,
         ]
 
         start = 0
@@ -90,7 +140,7 @@ def data_graphic():
         i = start
         while i < len(qty_list):
             if qty_list[i] == 0:
-                qty_list[i] = qty_list[i-1]
+                qty_list[i] = qty_list[i - 1]
             i += 1
 
         qty_to_date = qty_list[:current_month]
@@ -103,8 +153,11 @@ def data_graphic():
     historical_price = dict()
 
     for coin in user_coins:
-        historical = CoinsHistorical.query.filter_by(
-            coin=coin).order_by(CoinsHistorical.date.asc()).all()
+        historical = (
+            CoinsHistorical.query.filter_by(coin=coin)
+            .order_by(CoinsHistorical.date.asc())
+            .all()
+        )
         historical_list = list()
         for price in historical:
             historical_list.append(price.price)

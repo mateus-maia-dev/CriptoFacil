@@ -5,7 +5,7 @@ from app.services.accounting_service import get_accounting
 from http import HTTPStatus
 
 
-accounting = Blueprint('accounting', __name__)
+accounting = Blueprint('accounting', __name__, url_prefix='/api')
 
 
 @accounting.route('/accounting')
