@@ -7,9 +7,9 @@ from http import HTTPStatus
 import ipdb
 from app.services.transaction_service import get_transations
 
+import ipdb
 
 transactions = Blueprint("transactions", __name__, url_prefix="/api")
-
 
 
 @transactions.route("/transactions/register", methods=["POST"])
@@ -117,10 +117,10 @@ def update_transaction(transaction_id):
     user_id = get_jwt_identity()
     session = current_app.db.session
     data = request.get_json()
-    
+
     data_to_update: Transaction = Transaction.query.filter_by(
         user_id=user_id, id=transaction_id
-        ).first()
+    ).first()
 
     if data_to_update == None:
         return "Essa Transação não existe", HTTPStatus.NOT_FOUND
@@ -168,7 +168,7 @@ def update_transaction(transaction_id):
 
                 item.avg_price_brl = avg_price_brl
                 item.avg_price_usd = avg_price_usd
-            
+
             if data["type"] == 'sell' or data["type"] == 'input':
                 #item.net_quantity = data_to_update.net_quantity
                 # item.avg_price_brl = data_to_update.avg_price_brl
@@ -189,10 +189,9 @@ def delete_transaction(transaction_id):
 
     data_to_delete: Transaction = Transaction.query.filter_by(
         user_id=user_id, id=transaction_id
-        ).first()
+    ).first()
 
     session.delete(data_to_delete)
     session.commit()
 
     return "", HTTPStatus.NO_CONTENT
-
