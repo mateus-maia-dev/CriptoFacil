@@ -1,11 +1,10 @@
 from app.models.accounting_model import Accounting
 from flask import Blueprint, request, current_app, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from app.services.transaction_service import get_transations, create_accounting
 from app.models.transactions_model import Transaction
 from app.services import populate_accounting, get_data
 from http import HTTPStatus
-import ipdb
-from app.services.transaction_service import get_transations
 
 import ipdb
 
@@ -33,46 +32,9 @@ def create_transaction():
     price_usd = price_per_coin if fiat == 'usd' else price_per_coin / ptax
     price_brl = price_per_coin if fiat == 'brl' else price_per_coin * ptax
 
-    # transactions = (
-    #     Transaction.query.filter_by(coin=body["coin"], user_id=user_id)
-    #     .order_by(Transaction.date.asc())
-    #     .all()
-    # )
-
-    # if not transactions:
-    #     avg_price_brl = price_brl
-    #     avg_price_usd = price_usd
-    #     net_quantity = quantity
-
     avg_price_brl = price_brl
     avg_price_usd = price_usd
     net_quantity = quantity
-
-    # for _ in transactions:
-
-    #     if type == 'buy' or type == 'output':
-
-    #         net_quantity = transactions[-1].net_quantity
-    #         avg_price_brl = transactions[-1].avg_price_brl
-    #         avg_price_usd = transactions[-1].avg_price_usd
-
-    #         net_quantity += quantity
-
-    #         avg_price_brl = (
-    #             price_brl * quantity + avg_price_brl *
-    #             (net_quantity - quantity)
-    #         ) / net_quantity
-    #         avg_price_usd = (
-    #             price_usd * quantity + avg_price_usd *
-    #             (net_quantity - quantity)
-    #         ) / net_quantity
-
-    #     if type == 'sell' or type == 'input':
-    #         net_quantity = transactions[-1].net_quantity
-    #         avg_price_brl = transactions[-1].avg_price_brl
-    #         avg_price_usd = transactions[-1].avg_price_usd
-
-    #         net_quantity -= quantity
 
     new_transaction = Transaction(
         date=date,
@@ -108,7 +70,8 @@ def get_transaction():
     )
 
     transations_all = get_transations(transactions)
-    return "", 201
+
+    return jsonify(transations_all), 201
 
 
 @transactions.route("/transactions/<int:transaction_id>", methods=["PUT"])
@@ -128,55 +91,8 @@ def update_transaction(transaction_id):
     for key, value in data.items():
         setattr(data_to_update, key, value)
 
-    data_to_update.net_quantity = data["quantity"]
     session.add(data_to_update)
     session.commit()
-
-    date_dollar = str(data_to_update.date)
-    get_ptax = get_data(date_dollar)
-    ptax = float(get_ptax['sell_rate'])
-
-    fiat = data_to_update.fiat
-    price_per_coin = data_to_update.price_per_coin
-
-    price_usd = price_per_coin if fiat == 'usd' else price_per_coin / ptax
-    price_brl = price_per_coin if fiat == 'brl' else price_per_coin * ptax
-
-    transactions: Transaction = (
-        Transaction.query.filter_by(coin=data["coin"], user_id=user_id)
-        .order_by(Transaction.date.asc(), Transaction.id.asc())
-        .all()
-    )
-
-    for item in transactions:
-        if item.id >= data_to_update.id:
-            if data["type"] == 'buy' or data["type"] == 'output':
-                net_quantity = data_to_update.net_quantity
-                avg_price_brl = data_to_update.avg_price_brl
-                avg_price_usd = data_to_update.avg_price_usd
-
-                item.net_quantity += data_to_update.quantity
-
-                avg_price_brl = (
-                    price_brl * data_to_update.quantity + avg_price_brl *
-                    (net_quantity - data_to_update.quantity)
-                ) / item.net_quantity
-                avg_price_usd = (
-                    price_usd * data_to_update.quantity + avg_price_usd *
-                    (item.net_quantity - data_to_update.quantity)
-                ) / item.net_quantity
-
-                item.avg_price_brl = avg_price_brl
-                item.avg_price_usd = avg_price_usd
-
-            if data["type"] == 'sell' or data["type"] == 'input':
-                #item.net_quantity = data_to_update.net_quantity
-                # item.avg_price_brl = data_to_update.avg_price_brl
-                # item.avg_price_usd = data_to_update.avg_price_usd
-                item.net_quantity -= data_to_update.quantity
-
-            session.add(item)
-            session.commit()
 
     return data_to_update.serialized(), HTTPStatus.OK
 
