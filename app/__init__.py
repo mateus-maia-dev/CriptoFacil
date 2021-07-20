@@ -2,7 +2,6 @@ from flask import Flask
 from app import configurations
 from app.configurations import database, migrations, jwt_authentication, api, commands
 from app import views
-from app.services.coins_list import coins
 
 
 def create_app():

@@ -12,12 +12,12 @@ def request_value_dolar(last_price_date):
 
 def get_valid_date(sub_day, used_date):
     str_year = str(used_date).split("-")[0]
-    str_mouth = str(used_date).split("-")[1]
+    str_month = str(used_date).split("-")[1]
     str_day = str(used_date).split("-")[2]
 
     str_day = int(str_day) - sub_day
 
-    date_output = "{0}-{1}-{2}".format(str_mouth, str_day, str_year)
+    date_output = "{0}-{1}-{2}".format(str_month, str_day, str_year)
 
     api_bcb = request_value_dolar(date_output)
     api_response = api_bcb.json()["value"]
@@ -29,7 +29,7 @@ def get_valid_date(sub_day, used_date):
 
 def get_date():
     current_date = date.today()
-    str_mouth = str(current_date).split("-")[0]
+    str_month = str(current_date).split("-")[0]
     str_day = str(current_date).split("-")[1]
     str_year = str(current_date).split("-")[2]
 
@@ -40,7 +40,7 @@ def get_date():
     if check_fs == 7:
         str_day = int(str_day) - 2
 
-    date_output = "{0}-{1}-{2}".format(str_mouth, str_day, str_year)
+    date_output = "{0}-{1}-{2}".format(str_month, str_day, str_year)
     return date_output
 
 
@@ -84,8 +84,8 @@ def get_data(date_input):
 
 def fix_date(date_input):
     str_year = str(date_input).split("-")[0]
-    str_mouth = str(date_input).split("-")[1]
+    str_month = str(date_input).split("-")[1]
     str_day = str(date_input).split("-")[2]
 
-    date_output = "{0}-{1}-{2}".format(str_mouth, str_day, str_year)
+    date_output = "{0}-{1}-{2}".format(str_month, str_day, str_year)
     return date_output
