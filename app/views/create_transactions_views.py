@@ -108,6 +108,7 @@ def get_transaction():
     )
 
     transations_all = get_transations(transactions)
+    ipdb.set_trace()
     return "", 201
 
 
