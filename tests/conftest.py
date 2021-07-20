@@ -15,7 +15,7 @@ def sample_app():
     scope="module"
 )  # scope para caso eu queira manter o mesmo objeto para todos os testes no modulo. O módulo é o conftest
 def new_user():
-    fake = Faker(["pt_BR"])
+    fake = Faker(["en_US"])
     yield {
         "name": fake.first_name(),
         "last_name": fake.last_name(),
