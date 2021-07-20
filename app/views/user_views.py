@@ -1,47 +1,51 @@
 from flask import Blueprint, request, current_app
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.sql.expression import except_
 from app.models.user_model import User
 from http import HTTPStatus
 from flask_jwt_extended import create_access_token
-from datetime import timedelta
+from app.services.user_service import create, login
+from app.services.helper import (
+    validated_values_for_register_user,
+    validated_values_for_login,
+    verify_received_keys_from_create_user,
+    verify_received_keys_from_login,
+)
+
 
 user = Blueprint("user", __name__, url_prefix="/api")
 
+
 @user.route("/register", methods=["POST"])
 def create_user():
+
     body = request.get_json()
     session = current_app.db.session
 
-    name = body.get("name")
-    last_name = body.get("last_name")
-    email = body.get("email")
-    password = body.get("password")
+    try:
+        verify_received_keys_from_create_user(body)
+        validated_values_for_register_user(body)
 
-    new_user = User(name=name, last_name=last_name, email=email)
-    new_user.password = password
+        return create(body, session), HTTPStatus.CREATED
+    except KeyError as e:
+        return e.args[0]
+    except IntegrityError as e:
+        errorInfo = e.orig.args
+        return errorInfo[0], HTTPStatus.BAD_REQUEST
+    except Exception as e:
+        return e.args[0], HTTPStatus.BAD_REQUEST
 
-    session.add(new_user)
-    session.commit()
-
-    access_token = create_access_token(identity=new_user.id, expires_delta=timedelta(days=7))
-
-    return {
-        "token": access_token
-    }, HTTPStatus.CREATED
 
 @user.route("/login", methods=["POST"])
 def login_user():
     body = request.get_json()
 
-    email = body.get("email")
-    password = body.get("password")
+    try:
+        verify_received_keys_from_login(body)
+        validated_values_for_login(body)
 
-    user_data = User.query.filter_by(email=email).first()
-
-    if not user_data or not user_data.verify_password(password):
-        return { "message": "User not found" }, HTTPStatus.NOT_FOUND
-
-    access_token = create_access_token(identity=user_data.id, expires_delta=timedelta(days=7))
-
-    return {
-        "token": access_token
-    }, HTTPStatus.OK
+        return login(body)
+    except KeyError as e:
+        return e.args[0]
+    except Exception as e:
+        return e.args[0], HTTPStatus.BAD_REQUEST

@@ -3,8 +3,8 @@ from flask.json import jsonify
 from app.models.transactions_model import Transaction
 
 from flask_jwt_extended import jwt_required, get_jwt_identity
-#from app.services.accounting_service import get_accounting
-from app.services.transaction_service import get_transations, create_accounting
+from app.services.accounting_service import create_accounting
+from app.services.transactions_service import get_transations
 from http import HTTPStatus
 
 
