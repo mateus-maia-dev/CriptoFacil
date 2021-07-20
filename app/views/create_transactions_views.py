@@ -1,8 +1,14 @@
 from flask import Blueprint, request, current_app, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.transactions_model import Transaction
-from app.services import populate_accounting, get_data
+
+
 from http import HTTPStatus
+from app.services.helper import (
+    verify_received_keys_from_create_transactions,
+    validated_values_for_register_transaction,
+)
+from app.services.transactions_service import create
 
 
 transactions = Blueprint("transactions", __name__, url_prefix="/api")
@@ -11,78 +17,53 @@ transactions = Blueprint("transactions", __name__, url_prefix="/api")
 @transactions.route("/transactions/register", methods=["POST"])
 @jwt_required()
 def create_transaction():
-    session = current_app.db.session
+
     body = request.get_json()
     user_id = get_jwt_identity()
 
-    date = body.get("date")
-    type = body.get("type")
-    coin = body.get("coin")
-    fiat = body.get("fiat")
-    price_per_coin = body.get("price_per_coin")
-    quantity = body.get("quantity")
-    foreign_exch = body.get("foreign_exch")
+    try:
+        verify_received_keys_from_create_transactions(body)
+        validated_values_for_register_transaction(body)
 
-    get_ptax = get_data(date)
-    ptax = float(get_ptax['sell_rate'])
+        return create(body, user_id), HTTPStatus.CREATED
 
-    price_usd = price_per_coin if fiat == 'usd' else price_per_coin / ptax
-    price_brl = price_per_coin if fiat == 'brl' else price_per_coin * ptax
+    except KeyError as e:
+        return e.args[0], HTTPStatus.BAD_REQUEST
+    except Exception as e:
+        return e.args[0], HTTPStatus.BAD_REQUEST
 
-    transactions = (
-        Transaction.query.filter_by(coin=body["coin"], user_id=user_id)
-        .order_by(Transaction.date.asc())
-        .all()
-    )
 
-    if not transactions:
-        avg_price_brl = price_brl
-        avg_price_usd = price_usd
-        net_quantity = quantity
+@transactions.route("/transactions/<int:transaction_id>", methods=["PUT"])
+@jwt_required()
+def update_transaction(transaction_id):
+    user_id = get_jwt_identity()
+    session = current_app.db.session
+    data = request.get_json()
 
-    for _ in transactions:
+    data_to_update: Transaction = Transaction.query.filter_by(
+        user_id=user_id, id=transaction_id
+    ).first()
 
-        if type == 'buy' or type == 'output':
+    for key, value in data.items():
+        setattr(data_to_update, key, value)
 
-            net_quantity = transactions[-1].net_quantity
-            avg_price_brl = transactions[-1].avg_price_brl
-            avg_price_usd = transactions[-1].avg_price_usd
-
-            net_quantity += quantity
-
-            avg_price_brl = (
-                price_brl * quantity + avg_price_brl *
-                (net_quantity - quantity)
-            ) / net_quantity
-            avg_price_usd = (
-                price_usd * quantity + avg_price_usd *
-                (net_quantity - quantity)
-            ) / net_quantity
-
-        if type == 'sell' or type == 'input':
-            net_quantity = transactions[-1].net_quantity
-            avg_price_brl = transactions[-1].avg_price_brl
-            avg_price_usd = transactions[-1].avg_price_usd
-
-            net_quantity -= quantity
-
-    new_transaction = Transaction(
-        date=date,
-        type=type,
-        coin=coin,
-        fiat=fiat,
-        price_per_coin=price_per_coin,
-        avg_price_brl=avg_price_brl,
-        avg_price_usd=avg_price_usd,
-        net_quantity=net_quantity,
-        quantity=quantity,
-        foreign_exch=foreign_exch,
-        user_id=user_id,
-    )
-
-    session.add(new_transaction)
+    session.add(data_to_update)
     session.commit()
 
-    populate_accounting(user_id, ptax)
+    return data_to_update.serialized(), HTTPStatus.OK
 
-    return new_transaction.serialized(), HTTPStatus.CREATED
+
+@transactions.route("/transactions/<int:transaction_id>", methods=["DELETE"])
+@jwt_required()
+def delete_transaction(transaction_id):
+    user_id = get_jwt_identity()
+    session = current_app.db.session
+
+    data_to_delete: Transaction = Transaction.query.filter_by(
+        user_id=user_id, id=transaction_id
+    ).first()
+
+    session.delete(data_to_delete)
+    session.commit()
+
+    return "", HTTPStatus.NO_CONTENT
