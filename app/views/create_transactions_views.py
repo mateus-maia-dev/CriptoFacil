@@ -49,7 +49,26 @@ def get_transaction():
 
     transations_all = get_transations(transactions)
 
-    return jsonify(transations_all), 201
+    return jsonify(transations_all), HTTPStatus.CREATED
+
+
+@transactions.route("/transactions/<coin_transaction>", methods=["GET"])
+@jwt_required()
+def get_transaction_by_coin(coin_transaction):
+    user_id = get_jwt_identity()
+
+    transactions = (
+        Transaction.query.filter_by(user_id=user_id, coin=coin_transaction)
+        .order_by(Transaction.date.asc())
+        .all()
+    )
+
+    if transactions == []:
+        return "Coin not found", HTTPStatus.NOT_FOUND
+
+    transations_all = get_transations(transactions)
+
+    return jsonify(transations_all), HTTPStatus.OK
 
 
 @transactions.route("/transactions/<int:transaction_id>", methods=["PUT"])
@@ -64,7 +83,7 @@ def update_transaction(transaction_id):
     ).first()
 
     if data_to_update == None:
-        return "Essa Transação não existe", HTTPStatus.NOT_FOUND
+        return "Transaction not found", HTTPStatus.NOT_FOUND
 
     for key, value in data.items():
         setattr(data_to_update, key, value)
@@ -84,6 +103,9 @@ def delete_transaction(transaction_id):
     data_to_delete: Transaction = Transaction.query.filter_by(
         user_id=user_id, id=transaction_id
     ).first()
+
+    if data_to_delete == []:
+        return "Not found", HTTPStatus.NOT_FOUND
 
     session.delete(data_to_delete)
     session.commit()
