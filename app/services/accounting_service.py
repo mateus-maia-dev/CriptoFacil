@@ -7,53 +7,59 @@ from .mock_data import tax_table
 from flask_jwt_extended import get_jwt_identity
 
 
-def populate_accounting(user_id, ptax):
-    session = current_app.db.session
+def create_accounting(transactions):
+    accounting = dict()
+    accounting_per_coin = dict()
 
-    transaction: Transaction = (
-        Transaction.query.filter_by(user_id=user_id)
-        .order_by(Transaction.id.desc())
-        .first()
-    )
+    user_coins = list(transactions.keys())
 
-    price_brl = (
-        transaction.price_per_coin
-        if transaction.fiat == 'brl'
-        else transaction.price_per_coin * ptax
-    )
+    for coin in user_coins:
+        coin_transactions = transactions[coin]
 
-    date = transaction.date
-    transaction_id = transaction.id
-    sell_total = 0
-    profit = 0
-    foreign_exch_total = 0
+        accounting_per_coin[coin] = list()
 
-    if transaction.foreign_exch:
-        foreign_exch_total = price_brl * transaction.quantity
+        sell_total = 0
+        profit = 0
+        foreign_exch_total = 0
 
-    if transaction.type == 'sell' or transaction.type == 'input':
-        sell_total = price_brl * transaction.quantity
-        profit = (
-            (price_brl - transaction.avg_price_brl) * transaction.quantity
-            if price_brl - transaction.avg_price_brl > 0
-            else 0
-        )
+        for item in coin_transactions:
+            date = item["date"]
+            transaction_id = item["id"]
+            ptax = item["ptax"]
 
-    new_accounting = Accounting(
-        date=date,
-        sell_total=sell_total,
-        profit=profit,
-        foreign_exch_total=foreign_exch_total,
-        transaction_id=transaction_id,
-    )
+            price_brl = (
+                item["price_per_coin"]
+                if item["fiat"] == 'brl'
+                else item["price_per_coin"] * ptax
+            )
 
-    session.add(new_accounting)
-    session.commit()
+            if item["foreign_exch"]:
+                foreign_exch_total = price_brl * item["quantity"]
+
+            if item["type"] == 'sell' or item["type"] == 'input':
+                sell_total = price_brl * item["quantity"]
+                profit = (
+                    (price_brl - item["avg_price_brl"]) * item["quantity"]
+                    if price_brl - item["avg_price_brl"] > 0
+                    else 0
+                )
+
+            accounting = {
+                "date": date,
+                "transaction_id": transaction_id,
+                "sell_total": sell_total,
+                "profit": profit,
+                "foreign_exch_total": foreign_exch_total,
+            }
+            set_trace()
+            accounting_per_coin[coin].append(accounting)
+
+    return accounting_per_coin
 
 
 def get_accounting():
     session = current_app.db.session
-
+    set_trace()
     user_id = get_jwt_identity()
 
     aux_var = (

@@ -17,3 +17,11 @@ def init_app(app: Flask):
     from app.views.portfolio_views import portfolio
 
     app.register_blueprint(portfolio)
+
+    from app.views.graphic_view import graphic
+
+    app.register_blueprint(graphic)
+
+    from app.views.charts_view import charts
+
+    app.register_blueprint(charts)

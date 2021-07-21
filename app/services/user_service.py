@@ -1,53 +1,41 @@
 from app.models.user_model import User
-from app.models.user_model import User
-from flask_restful import reqparse
-from flask import request, jsonify
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
-from app.services.helper import init_app, get_user
-from ipdb import set_trace
-import jwt
+from flask_jwt_extended import create_access_token
+from datetime import timedelta
+from http import HTTPStatus
+from sqlalchemy.exc import IntegrityError
 
 
-def register() -> dict:
-    parser = reqparse.RequestParser()
+def create(body: dict, session):
 
-    parser.add_argument("name", type=str, required=True)
-    parser.add_argument("last_name", type=str, required=True)
-    parser.add_argument("email", type=str, required=True)
-    parser.add_argument("password", type=str, required=True)
+    name = body.get("name")
+    last_name = body.get("last_name")
+    email = body.get("email")
+    password = body.get("password")
 
-    new_user: User = User(**parser.parse_args())
+    new_user = User(name=name, last_name=last_name, email=email)
+    new_user.password = password
 
-    init_app(new_user)
+    session.add(new_user)
+    session.commit()
 
-    return {
-        "name": new_user.name,
-        "last_name": new_user.last_name,
-        "email": new_user.email,
-    }
+    access_token = create_access_token(
+        identity=new_user.id, expires_delta=timedelta(days=7)
+    )
+
+    return {"token": access_token}
 
 
-def login():
-    parser = reqparse.RequestParser()
-    # username = request.json.get("email", None)
-    # password = request.json.get("password", None)
+def login(body: dict):
+    email = body.get("email")
+    password = body.get("password")
 
-    parser.add_argument("email", type=str, required=True)
-    parser.add_argument("password", type=str, required=True)
+    user_data = User.query.filter_by(email=email).first()
 
-    username = parser.parse_args()['email']
-    password = parser.parse_args()['password']
+    if not user_data or not user_data.verify_password(password):
+        return {"message": "User not found"}, HTTPStatus.NOT_FOUND
 
-    user = User.query.filter_by(email=username).first()
-    if User.verify_password(user, password):
-        access_token = create_access_token(identity=username)
-        print(access_token)
+    access_token = create_access_token(
+        identity=user_data.id, expires_delta=timedelta(days=7)
+    )
 
-        # get_user(access_token)
-        # TODO PRECISO SALVAR ESSE TOKEN EM ALGUM LUGAR PARA CHAMA-LO NO REGISTRO DE TRANSAÇÃO\
-        # e decodifica-lo para o user
-        # set_trace()
-
-        return jsonify(access_token=access_token)
-
-    return jsonify({"msg": "Bad username or password"}), 401
+    return {"token": access_token}, HTTPStatus.OK
