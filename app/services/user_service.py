@@ -22,7 +22,7 @@ def create(body: dict, session):
         identity=new_user.id, expires_delta=timedelta(days=7)
     )
 
-    return {"token": access_token}
+    return new_user.serialized()
 
 
 def login(body: dict):

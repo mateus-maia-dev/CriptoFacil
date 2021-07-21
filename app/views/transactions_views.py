@@ -83,7 +83,7 @@ def update_transaction(transaction_id):
     ).first()
 
     if data_to_update == None:
-        return "Transaction not found", HTTPStatus.NOT_FOUND
+        return "Transaction not found", HTTPStatus.BAD_REQUEST
 
     for key, value in data.items():
         setattr(data_to_update, key, value)
@@ -104,8 +104,8 @@ def delete_transaction(transaction_id):
         user_id=user_id, id=transaction_id
     ).first()
 
-    if data_to_delete == []:
-        return "Not found", HTTPStatus.NOT_FOUND
+    if data_to_delete == None:
+        return "Transaction not found", HTTPStatus.BAD_REQUEST
 
     session.delete(data_to_delete)
     session.commit()
