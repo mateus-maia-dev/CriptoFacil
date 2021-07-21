@@ -15,7 +15,7 @@ def create_accounting(transactions):
 
     for coin in user_coins:
         coin_transactions = transactions[coin]
-        
+
         accounting_per_coin[coin] = list()
 
         sell_total = 0
@@ -27,7 +27,11 @@ def create_accounting(transactions):
             transaction_id = item["id"]
             ptax = item["ptax"]
 
-            price_brl = item["price_per_coin"] if item["fiat"] == 'brl' else item["price_per_coin"] * ptax
+            price_brl = (
+                item["price_per_coin"]
+                if item["fiat"] == 'brl'
+                else item["price_per_coin"] * ptax
+            )
 
             if item["foreign_exch"]:
                 foreign_exch_total = price_brl * item["quantity"]
@@ -47,7 +51,7 @@ def create_accounting(transactions):
                 "profit": profit,
                 "foreign_exch_total": foreign_exch_total,
             }
-
+            set_trace()
             accounting_per_coin[coin].append(accounting)
 
     return accounting_per_coin
@@ -55,7 +59,7 @@ def create_accounting(transactions):
 
 def get_accounting():
     session = current_app.db.session
-
+    set_trace()
     user_id = get_jwt_identity()
 
     aux_var = (
@@ -99,4 +103,3 @@ def get_accounting():
                 tax_table[month]['tax'] = tax_table[month]['profit'] * 0.225
 
     return tax_table
-
