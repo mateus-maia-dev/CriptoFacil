@@ -1,8 +1,0 @@
-[run]
-
-source = ./app
-omit = ./migrations,./venv
-
-[report]
-
-show_missing = True
