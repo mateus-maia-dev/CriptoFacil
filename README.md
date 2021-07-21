@@ -2,6 +2,16 @@
 
 Esta aplicação irá fazer a consolidação de investimentos em criptomoedas facilitando o controle de da rentabilidade de suas posições e realizando os cálculos necessários para as obrigações tributárias.
 
+### Para rodar a aplicação
+- `python -m venv venv`
+- `source venv/bin/activate`
+- `pip install -r requirements.txt`
+- `flask run`
+
+### Para rodar os testes de integração
+- `pytest`
+
+
 # Endpoints
 
 ## User
