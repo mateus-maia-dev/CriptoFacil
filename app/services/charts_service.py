@@ -1,7 +1,6 @@
 from app.models.coins_historical_quotes_model import CoinsHistorical
 from app.services.coingecko_service import get_price
 import datetime
-import ipdb
 
 
 today = datetime.datetime.today()
@@ -162,7 +161,6 @@ def get_historical_price(transactions_list):
 
 
 def get_positions(transactions_list, quantity, historical_price):
-    from ipdb import set_trace
 
     user_coins = get_user_coins(transactions_list)
     result_per_coin = dict()
@@ -179,7 +177,6 @@ def get_positions(transactions_list, quantity, historical_price):
 
         for item in price_per_month:
             result_per_coin[coin][item[0]].update(dict(price=item[1]))
-    set_trace()
     for coin in user_coins:
         for month in month_to_date:
             total = (

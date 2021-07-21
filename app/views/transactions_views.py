@@ -1,4 +1,3 @@
-from app.models.accounting_model import Accounting
 from flask import Blueprint, request, current_app, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.transactions_service import get_transations
@@ -64,7 +63,7 @@ def get_transaction_by_coin(coin_transaction):
     )
 
     if transactions == []:
-        return "Coin not found", HTTPStatus.NOT_FOUND
+        return "Coin not found", HTTPStatus.BAD_REQUEST
 
     transations_all = get_transations(transactions)
 

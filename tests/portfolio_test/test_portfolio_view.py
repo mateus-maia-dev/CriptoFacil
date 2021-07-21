@@ -1,11 +1,15 @@
 from flask.testing import FlaskClient
-from ipdb import set_trace
 
 
 def test_should_retrieve_a_portfolio_with_transactions(
     app_client: FlaskClient, new_user, new_transaction
 ):
-    response = app_client.post('/api/register', json=new_user)
+    app_client.post('/api/register', json=new_user)
+
+    credentials = {'email': new_user['email'], 'password': new_user['password']}
+
+    response = app_client.post('/api/login', json=credentials)
+
     token = response.get_json()['token']
     headers = {'Authorization': f'Bearer {token}'}
 
@@ -20,9 +24,13 @@ def test_should_retrieve_a_portfolio_with_transactions(
 def test_should_retrieve_a_portfolio_with_no_transactions(
     app_client: FlaskClient, new_user
 ):
-    user = app_client.post('/api/register', json=new_user)
+    app_client.post('/api/register', json=new_user)
 
-    token = user.get_json()['token']
+    credentials = {'email': new_user['email'], 'password': new_user['password']}
+
+    response = app_client.post('/api/login', json=credentials)
+
+    token = response.get_json()['token']
     headers = {'Authorization': f'Bearer {token}'}
 
     portfolio = app_client.get('/api/portfolio/list', headers=headers)
