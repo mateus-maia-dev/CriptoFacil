@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify
 from app.services.coingecko_service import get_price
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.transactions_model import Transaction
+from app.services.transactions_service import get_transations
 from http import HTTPStatus
 
 portfolio = Blueprint("portfolio", __name__, url_prefix="/api")
@@ -14,32 +15,26 @@ def list_portfolio():
     data_coingecko = get_price()
 
     transaction_user = Transaction.query.filter_by(user_id=user_id).all()
-    list_dict_transaction_user = [object_transaction.coin.lower() for object_transaction in transaction_user]
-
-    list_data_coin_end = list()
-
-    list_name_coin = list(set(list_dict_transaction_user))
-
-    for name in list_name_coin:
-        list_Transaction_coin = Transaction.query.filter_by(coin=name).all()
-        list_data_coin_end.append(list_Transaction_coin[-1])
+    fix_transactions = get_transations(transaction_user)
+    user_coins = list(fix_transactions.keys())
 
     list_coin_data_user = list()
 
     for _, name in enumerate(data_coingecko):
-        if name.lower() in list_dict_transaction_user:
-            data_final = data_coingecko[name]
-            data_final["coin"] = name.lower()
-            data_final["avg_price_brl"] = [data.avg_price_brl for data in list_data_coin_end if data.coin == name.lower()][0]
-            data_final["net_quantity"] = [data.net_quantity for data in list_data_coin_end if data.coin == name.lower()][0]
-            list_coin_data_user.append(data_final)
+        for coin in user_coins:
+            if name.lower() == coin:
+                data_final = data_coingecko[name]
+                data_final["coin"] = name.lower()
+                data_final["avg_price_brl"] = fix_transactions[coin][-1]["avg_price_brl"]
+                data_final["net_quantity"] = fix_transactions[coin][-1]["net_quantity"]
+                list_coin_data_user.append(data_final)
 
     return jsonify([{
-        "coin": data["coin"],
-        "avg_price": data["avg_price_brl"],
-        "quantity": data["net_quantity"],
-        "current_price": data["brl"],
-        "24h_change": data["brl_24h_change"],
-        "current_position": data["brl"] * data["net_quantity"],
-        "profit": (data["brl"] - data["avg_price_brl"]) * data["net_quantity"],
-    } for data in list_coin_data_user]), HTTPStatus.OK
+            "coin": data["coin"],
+            "avg_price": round(data["avg_price_brl"], 2),
+            "quantity": round(data["net_quantity"], 4),
+            "current_price": round(data["brl"], 2),
+            "24h_change": round(data["brl_24h_change"], 2),
+            "current_position": round(data["brl"] * data["net_quantity"], 2),
+            "profit": round((data["brl"] - data["avg_price_brl"]) * data["net_quantity"], 2),
+        } for data in list_coin_data_user]), HTTPStatus.OK

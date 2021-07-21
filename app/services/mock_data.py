@@ -1,26 +1,26 @@
 tax_table = {
-    "Jan": {
+    "January": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Feb": {
+    "February": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Mar": {
+    "March": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Apr": {
+    "April": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
@@ -34,49 +34,49 @@ tax_table = {
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Jun": {
+    "June": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Jul": {
+    "July": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Aug": {
+    "August": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Sep": {
+    "September": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Oct": {
+    "October": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Nov": {
+    "November": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
         "foreign_exch_total": 0,
         "status": "ISENTO",
     },
-    "Dec": {
+    "December": {
         "sell_total": 0,
         "profit": 0,
         "tax": 0,
