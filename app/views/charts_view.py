@@ -1,8 +1,10 @@
+from os import MFD_ALLOW_SEALING
 from flask import Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.transactions_model import Transaction
 from app.models.coins_historical_quotes_model import CoinsHistorical
 from app.services.transactions_service import get_transations
+from app.services.coingecko_service import get_price
 from http import HTTPStatus
 import datetime
 
@@ -22,6 +24,8 @@ def data_graphic():
         .all()
     )
 
+    transactions_list = get_transations(transactions)
+
     today = datetime.datetime.today()
     current_month = today.month
     month_list = [
@@ -39,21 +43,14 @@ def data_graphic():
         'dec',
     ]
 
-    transactions_list = get_transations(transactions)
+    user_coins = list(transactions_list.keys())
 
-    coins_list = [coin['coin'] for coin in transactions_list]
-    coins_set = set(coins_list)
-    user_coins = list(coins_set)
-
+    # quantity per month
     quantity = dict()
 
     for coin in user_coins:
 
-        coin_transactions = [
-            transaction
-            for transaction in transactions_list
-            if transaction['coin'] == coin
-        ]
+        coin_transactions = transactions_list[coin]
 
         jan = [
             transaction
@@ -149,7 +146,7 @@ def data_graphic():
 
         quantity[coin] = qty_per_month
 
-    ###
+    # historical prices
     historical_price = dict()
 
     for coin in user_coins:
@@ -163,4 +160,41 @@ def data_graphic():
             historical_list.append(price.price)
         historical_price[coin] = historical_list
 
-        ipdb.set_trace()
+    # current prices
+    current_price = get_price()
+
+    for coin in user_coins:
+        price = current_price[coin]['brl']
+        historical_price[coin].append(price)
+
+    # results
+    result_per_coin = dict()
+
+    for coin in user_coins:
+        result_per_coin[coin] = dict()
+
+        price_per_month = list(zip(month_to_date, historical_price[coin]))
+
+        qty = quantity[coin]
+        for item in qty:
+            result_per_coin[coin][item[0]] = dict(qty=item[1])
+
+        for item in price_per_month:
+            result_per_coin[coin][item[0]].update(dict(price=item[1]))
+
+    for coin in user_coins:
+        for month in month_to_date:
+            total = result_per_coin[coin][month]['qty'] * \
+                result_per_coin[coin][month]['price']
+            result_per_coin[coin][month].update(dict(total=total))
+
+    total_balance = dict()
+
+    for coin in user_coins:
+
+        for month in month_to_date:
+            total = list()
+            total.append(result_per_coin[coin][month]['total'])
+            total_balance[month] = round(sum(total), 2)
+
+    return total_balance
