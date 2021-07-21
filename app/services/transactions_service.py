@@ -27,6 +27,18 @@ def create(body: dict, user_id: int):
     avg_price_usd = price_usd
     net_quantity = quantity
 
+    transactions = (
+        Transaction.query.filter_by(user_id=user_id)
+        .order_by(Transaction.date.asc())
+        .all()
+    )
+
+    get_net_quantity = get_transations(transactions)
+
+    if type == 'sell' or type == 'input':
+            if get_net_quantity[coin][-1]["net_quantity"] < quantity:
+                raise Exception({"error": "insufficients funds."})
+
     new_transaction = Transaction(
         date=date,
         type=type,
