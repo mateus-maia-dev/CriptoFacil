@@ -6,8 +6,20 @@ import ipdb
 
 today = datetime.datetime.today()
 current_month = today.month
-month_list = ['jan',   'fev',  'mar', 'abr', 'mai',
-              'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dec']
+month_list = [
+    'jan',
+    'fev',
+    'mar',
+    'abr',
+    'mai',
+    'jun',
+    'jul',
+    'ago',
+    'sep',
+    'oct',
+    'nov',
+    'dec',
+]
 month_to_date = month_list[:current_month]
 
 
@@ -150,6 +162,8 @@ def get_historical_price(transactions_list):
 
 
 def get_positions(transactions_list, quantity, historical_price):
+    from ipdb import set_trace
+
     user_coins = get_user_coins(transactions_list)
     result_per_coin = dict()
 
@@ -159,16 +173,19 @@ def get_positions(transactions_list, quantity, historical_price):
         price_per_month = list(zip(month_to_date, historical_price[coin]))
 
         qty = quantity[coin]
+
         for item in qty:
             result_per_coin[coin][item[0]] = dict(qty=item[1])
 
         for item in price_per_month:
             result_per_coin[coin][item[0]].update(dict(price=item[1]))
-
+    set_trace()
     for coin in user_coins:
         for month in month_to_date:
-            total = result_per_coin[coin][month]['qty'] * \
-                result_per_coin[coin][month]['price']
+            total = (
+                result_per_coin[coin][month]['qty']
+                * result_per_coin[coin][month]['price']
+            )
             result_per_coin[coin][month].update(dict(total=total))
 
     return result_per_coin
