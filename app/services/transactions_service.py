@@ -3,7 +3,6 @@ from app.services import get_data
 from flask import current_app
 
 from app.services.current_dollar_value import get_data
-import ipdb
 
 
 def create(body: dict, user_id: int):
