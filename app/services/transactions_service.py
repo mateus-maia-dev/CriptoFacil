@@ -56,6 +56,8 @@ def create(body: dict, user_id: int):
             avg_price_brl = transactions[-1].avg_price_brl
             avg_price_usd = transactions[-1].avg_price_usd
 
+            if net_quantity < quantity:
+                raise Exception({"error": "insufficients funds."})
             net_quantity -= quantity
 
     new_transaction = Transaction(
