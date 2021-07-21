@@ -3,7 +3,6 @@ from app.services import get_data
 from flask import current_app
 
 from app.services.current_dollar_value import get_data
-import ipdb
 
 
 def create(body: dict, user_id: int):
@@ -23,6 +22,7 @@ def create(body: dict, user_id: int):
     price_usd = price_per_coin if fiat == 'usd' else price_per_coin / ptax
     price_brl = price_per_coin if fiat == 'brl' else price_per_coin * ptax
 
+<<<<<<< HEAD
     transactions = (
         Transaction.query.filter_by(coin=body["coin"], user_id=user_id)
         .order_by(Transaction.date.asc())
@@ -59,6 +59,11 @@ def create(body: dict, user_id: int):
             if net_quantity < quantity:
                 raise Exception({"error": "insufficients funds."})
             net_quantity -= quantity
+=======
+    avg_price_brl = price_brl
+    avg_price_usd = price_usd
+    net_quantity = quantity
+>>>>>>> develop
 
     new_transaction = Transaction(
         date=date,
