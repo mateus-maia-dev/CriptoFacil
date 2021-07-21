@@ -22,48 +22,9 @@ def create(body: dict, user_id: int):
     price_usd = price_per_coin if fiat == 'usd' else price_per_coin / ptax
     price_brl = price_per_coin if fiat == 'brl' else price_per_coin * ptax
 
-<<<<<<< HEAD
-    transactions = (
-        Transaction.query.filter_by(coin=body["coin"], user_id=user_id)
-        .order_by(Transaction.date.asc())
-        .all()
-    )
-
-    if not transactions:
-        avg_price_brl = price_brl
-        avg_price_usd = price_usd
-        net_quantity = quantity
-
-    for _ in transactions:
-
-        if type == 'buy' or type == 'output':
-
-            net_quantity = transactions[-1].net_quantity
-            avg_price_brl = transactions[-1].avg_price_brl
-            avg_price_usd = transactions[-1].avg_price_usd
-
-            net_quantity += quantity
-
-            avg_price_brl = (
-                price_brl * quantity + avg_price_brl * (net_quantity - quantity)
-            ) / net_quantity
-            avg_price_usd = (
-                price_usd * quantity + avg_price_usd * (net_quantity - quantity)
-            ) / net_quantity
-
-        if type == 'sell' or type == 'input':
-            net_quantity = transactions[-1].net_quantity
-            avg_price_brl = transactions[-1].avg_price_brl
-            avg_price_usd = transactions[-1].avg_price_usd
-
-            if net_quantity < quantity:
-                raise Exception({"error": "insufficients funds."})
-            net_quantity -= quantity
-=======
     avg_price_brl = price_brl
     avg_price_usd = price_usd
     net_quantity = quantity
->>>>>>> develop
 
     new_transaction = Transaction(
         date=date,
