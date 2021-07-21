@@ -2,7 +2,6 @@ from app.models.user_model import User
 from flask_jwt_extended import create_access_token
 from datetime import timedelta
 from http import HTTPStatus
-from sqlalchemy.exc import IntegrityError
 
 
 def create(body: dict, session):
@@ -18,11 +17,11 @@ def create(body: dict, session):
     session.add(new_user)
     session.commit()
 
-    access_token = create_access_token(
-        identity=new_user.id, expires_delta=timedelta(days=7)
-    )
+    # access_token = create_access_token(
+    #     identity=new_user.id, expires_delta=timedelta(days=7)
+    # )
 
-    return {"token": access_token}
+    return new_user.serialized()
 
 
 def login(body: dict):
@@ -32,7 +31,7 @@ def login(body: dict):
     user_data = User.query.filter_by(email=email).first()
 
     if not user_data or not user_data.verify_password(password):
-        return {"message": "User not found"}, HTTPStatus.NOT_FOUND
+        return {"message": "password or email is not valid."}, HTTPStatus.NOT_FOUND
 
     access_token = create_access_token(
         identity=user_data.id, expires_delta=timedelta(days=7)

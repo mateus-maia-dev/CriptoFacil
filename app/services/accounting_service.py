@@ -1,9 +1,7 @@
-from ipdb import set_trace
 from .mock_data import tax_table
 
 
 def create_accounting(transactions):
-    accounting = dict()
     accounting_per_coin = dict()
 
     user_coins = list(transactions.keys())

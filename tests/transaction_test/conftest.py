@@ -8,7 +8,7 @@ def new_transaction():
         "type": "buy",
         "coin": "bitcoin",
         "fiat": "brl",
-        "price_per_coin": 100000,
-        "quantity": 2,
+        "price_per_coin": 100000.0,
+        "quantity": 2.0,
         "foreign_exch": True,
     }

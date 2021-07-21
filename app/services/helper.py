@@ -1,6 +1,5 @@
 from re import I
 from flask import current_app
-from ipdb import set_trace
 import re
 from app.services.coins_list import coinsListArr
 
@@ -59,8 +58,6 @@ def validated_values_for_register_user(body: dict):
 
     email_pattern = r"[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+"
     name_pattern = r"^[a-z-A-Z]{3,15}$"
-
-    # set_trace()
 
     if not bool(re.match(email_pattern, email)):
         raise Exception({"error": "invalid value on email's field"})

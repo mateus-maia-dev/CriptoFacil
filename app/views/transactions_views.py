@@ -1,4 +1,3 @@
-from app.models.accounting_model import Accounting
 from flask import Blueprint, request, current_app, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.transactions_service import get_transations
@@ -64,7 +63,7 @@ def get_transaction_by_coin(coin_transaction):
     )
 
     if transactions == []:
-        return "Coin not found", HTTPStatus.NOT_FOUND
+        return "Coin not found", HTTPStatus.BAD_REQUEST
 
     transations_all = get_transations(transactions)
 
@@ -83,7 +82,7 @@ def update_transaction(transaction_id):
     ).first()
 
     if data_to_update == None:
-        return "Transaction not found", HTTPStatus.NOT_FOUND
+        return "Transaction not found", HTTPStatus.BAD_REQUEST
 
     for key, value in data.items():
         setattr(data_to_update, key, value)
@@ -104,8 +103,8 @@ def delete_transaction(transaction_id):
         user_id=user_id, id=transaction_id
     ).first()
 
-    if data_to_delete == []:
-        return "Not found", HTTPStatus.NOT_FOUND
+    if data_to_delete == None:
+        return "Transaction not found", HTTPStatus.BAD_REQUEST
 
     session.delete(data_to_delete)
     session.commit()

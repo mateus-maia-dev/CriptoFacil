@@ -1,7 +1,5 @@
 import requests
-from datetime import date, datetime
-
-# Função que deve ser usada na View -> get_data()
+from datetime import date
 
 
 def request_value_dolar(last_price_date):

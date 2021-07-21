@@ -1,9 +1,7 @@
 from flask import Blueprint, request, current_app
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.sql.expression import except_
-from app.models.user_model import User
+
 from http import HTTPStatus
-from flask_jwt_extended import create_access_token
 from app.services.user_service import create, login
 from app.services.helper import (
     validated_values_for_register_user,
