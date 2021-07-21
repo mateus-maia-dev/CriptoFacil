@@ -20,27 +20,21 @@ def list_portfolio():
 
     list_coin_data_user = list()
 
-    print(data_coingecko)
-
     for _, name in enumerate(data_coingecko):
-        if name.lower() in user_coins:
-            data_final = data_coingecko[name]
-            data_final["coin"] = name.lower()
-            #data_final["avg_price_brl"] = [data.avg_price_brl for data in list_data_coin_end if data.coin == name.lower()]
-            #data_final["net_quantity"] = [data.net_quantity for data in list_data_coin_end if data.coin == name.lower()]
-            list_coin_data_user.append(data_final)
+        for coin in user_coins:
+            if name.lower() == coin:
+                data_final = data_coingecko[name]
+                data_final["coin"] = name.lower()
+                data_final["avg_price_brl"] = fix_transactions[coin][-1]["avg_price_brl"]
+                data_final["net_quantity"] = fix_transactions[coin][-1]["net_quantity"]
+                list_coin_data_user.append(data_final)
 
-    # print(data_final)
-    # print(list_coin_data_user)
-    return "", HTTPStatus.OK
-
-
-# return jsonify([{
-#         "coin": data["coin"],
-#         "avg_price": data["avg_price_brl"],
-#         "quantity": data["net_quantity"],
-#         "current_price": data["brl"],
-#         "24h_change": data["brl_24h_change"],
-#         "current_position": data["brl"] * data["net_quantity"],
-#         "profit": (data["brl"] - data["avg_price_brl"]) * data["net_quantity"],
-#     } for data in list_coin_data_user]), HTTPStatus.OK
+    return jsonify([{
+            "coin": data["coin"],
+            "avg_price": round(data["avg_price_brl"], 2),
+            "quantity": round(data["net_quantity"], 4),
+            "current_price": round(data["brl"], 2),
+            "24h_change": round(data["brl_24h_change"], 2),
+            "current_position": round(data["brl"] * data["net_quantity"], 2),
+            "profit": round((data["brl"] - data["avg_price_brl"]) * data["net_quantity"], 2),
+        } for data in list_coin_data_user]), HTTPStatus.OK
