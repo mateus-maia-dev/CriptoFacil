@@ -67,7 +67,8 @@ def get_transations(transactions):
 
     for coin in user_coins:
         coin_transactions = [
-            transaction for transaction in transactions if transaction.coin == coin]
+            transaction for transaction in transactions if transaction.coin == coin
+        ]
 
         transactions_per_coin[coin] = list()
 
@@ -80,19 +81,27 @@ def get_transations(transactions):
             get_ptax_str = get_data(get_ptax)
             ptax = float(get_ptax_str['sell_rate'])
 
-            price_usd = item.price_per_coin if item.fiat == 'usd' else item.price_per_coin / ptax
-            price_brl = item.price_per_coin if item.fiat == 'brl' else item.price_per_coin * ptax
+            price_usd = (
+                item.price_per_coin
+                if item.fiat == 'usd'
+                else item.price_per_coin / ptax
+            )
+            price_brl = (
+                item.price_per_coin
+                if item.fiat == 'brl'
+                else item.price_per_coin * ptax
+            )
 
             if item.type == 'buy' or item.type == 'output':
                 net_quantity += item.quantity
 
                 avg_price_brl = (
-                    price_brl * item.quantity + avg_price_brl *
-                    (net_quantity - item.quantity)
+                    price_brl * item.quantity
+                    + avg_price_brl * (net_quantity - item.quantity)
                 ) / net_quantity
                 avg_price_usd = (
-                    price_usd * item.quantity + avg_price_usd *
-                    (net_quantity - item.quantity)
+                    price_usd * item.quantity
+                    + avg_price_usd * (net_quantity - item.quantity)
                 ) / net_quantity
 
             if item.type == 'sell' or item.type == 'input':
@@ -112,7 +121,7 @@ def get_transations(transactions):
                 "avg_price_brl": round(avg_price_brl, 2),
                 "avg_price_usd": round(avg_price_usd, 2),
                 "foreign_exch": item.foreign_exch,
-                "ptax": ptax
+                "ptax": ptax,
             }
 
             transactions_per_coin[coin].append(result)

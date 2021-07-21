@@ -1,3 +1,4 @@
+from os import set_inheritable
 from flask import Blueprint, current_app
 from flask.json import jsonify
 from app.models.transactions_model import Transaction
@@ -7,6 +8,7 @@ from app.services.accounting_service import create_accounting
 from app.services.transactions_service import get_transations
 from http import HTTPStatus
 
+from ipdb import set_trace
 
 accounting = Blueprint('accounting', __name__, url_prefix="/api")
 
@@ -26,6 +28,6 @@ def retrieve_accounting():
         transaction = get_transations(transactions)
         accounting = create_accounting(transaction)
 
-        return jsonify(accounting), HTTPStatus.OK
+        return accounting, HTTPStatus.OK
     except:
         ...
