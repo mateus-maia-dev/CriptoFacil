@@ -1,6 +1,6 @@
 from flask import Flask
 from app import configurations
-from app.configurations import database, migrations, jwt_authentication, api, commands
+from app.configurations import database, migrations, jwt_authentication, commands
 from app import views
 
 
