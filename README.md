@@ -325,6 +325,105 @@ GET https://criptofacil-deploy.herokuapp.com/api/portfolio/list
 
 ## Accounting
 
+Este endpoint irá retornar a tabela de informações referentes a declaração de imposto de renda e IN188.
+
+### Point Request
+
+```markdown
+GET https://criptofacil-deploy.herokuapp.com/api/accounting
+
+### Response Format
+
+```json
+{
+  "January": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 660000.0,
+    "status": "NÃO ISENTO"
+  },
+  "February": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "March": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "April": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "May": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "June": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "July": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "August": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "September": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "October": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "November": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  },
+  "December": {
+    "sell_total": 0,
+    "profit": 0,
+    "tax": 0,
+    "foreign_exch_total": 0,
+    "status": "ISENTO"
+  }
+}
+
+```
+
 ## Chart
 
 Este endpoint irá retornar  um JSON com as informações necessárias para gerar um gráfico da evolução patrimonial do usuário. As chaves do JSON são os meses do ano até o mês vigente e os valores são o produto entre o preço da moeda e a quantidade em carteira no último dia de cada mês. O valor do mês vigente utiliza a cotação da moeda no momento da geração dos dados.
