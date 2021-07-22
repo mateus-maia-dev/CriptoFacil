@@ -335,14 +335,23 @@ GET https://criptofacil-deploy.herokuapp.com/api/accounting
 
 ### Response Format
 
+A resposta será em formato JSON e trará uma lista com todos os meses do ano contendo os seguintes campos:
+
+- **sell_total** referente ao total de alienações realizadas no mês;
+- **profit** referente ao lucro obtido com a alienação dos ativos no mês;
+- **tax** referente aos tributados sobre o ganho de capital seguindo alíquotas progressivas estabelecidas em função do lucro no mês;
+- **foreign_exch_total** referente ao valor mensal das operações realizadas fora de exchange nacional no mês;
+- **status** indica se o usuário é "isento" ou "não isento" de informar as operações à Receita Federal conforme a IN nº 1888/2019.
+
+
 ```json
 {
   "January": {
-    "sell_total": 0,
-    "profit": 0,
+    "sell_total": 5435.35,
+    "profit": 510,
     "tax": 0,
-    "foreign_exch_total": 660000.0,
-    "status": "NÃO ISENTO"
+    "foreign_exch_total": 7518.15,
+    "status": "ISENTO"
   }
   
 }
