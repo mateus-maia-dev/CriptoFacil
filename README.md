@@ -331,6 +331,7 @@ Este endpoint irá retornar a tabela de informações referentes a declaração 
 
 ```markdown
 GET https://criptofacil-deploy.herokuapp.com/api/accounting
+```
 
 ### Response Format
 
@@ -342,84 +343,8 @@ GET https://criptofacil-deploy.herokuapp.com/api/accounting
     "tax": 0,
     "foreign_exch_total": 660000.0,
     "status": "NÃO ISENTO"
-  },
-  "February": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "March": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "April": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "May": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "June": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "July": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "August": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "September": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "October": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "November": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
-  },
-  "December": {
-    "sell_total": 0,
-    "profit": 0,
-    "tax": 0,
-    "foreign_exch_total": 0,
-    "status": "ISENTO"
   }
+  
 }
 
 ```
