@@ -73,6 +73,8 @@ POST https://criptofacil-deploy.herokuapp.com/api/login
 }
 ```
 
+
+
 ## Transactions
 
 Este endpoint terá informações referentes as transações do usuário. O usuário poderá registrar uma nova transação, verificar o histórico de todas as transações e o histórico filtrado por moeda, editar e excluir uma transação. 
@@ -288,9 +290,11 @@ DELETE https://criptofacil-deploy.herokuapp.com/api/transactions/<id>
 {}
 ```
 
+
+
 ## Portfolio
 
-Este endpoint irá retornar  um JSON com a informações referentes a posição do usuário em cada moeda. tais como: preço médio das compras, quantidade atual, preço da moeda no momento, variação de preço da moeda nas últimas 24 horas, posição total no momento e o valor de lucro ou prejuízo no momento. Todos os valores estão na moeda BRL.
+Este endpoint irá retornar as informações referentes a posição do usuário em cada moeda. tais como: preço médio das compras, quantidade atual, preço da moeda no momento, variação de preço da moeda nas últimas 24 horas, posição total no momento e o valor de lucro ou prejuízo no momento. Todos os valores estão na moeda BRL.
 
 ### Point Request
 
@@ -299,6 +303,17 @@ GET https://criptofacil-deploy.herokuapp.com/api/portfolio/list
 ```
 
 ### Response Format
+
+A resposta será em formato JSON e trará uma lista com todas as criptomoedas em carteira contendo os seguintes campos:
+
+- **coin** referente a criptomoeda;
+- **avg_price** referente ao preço médio ponderado das compras até a última transação, em BRL;
+- **quantity** referente a quantidade da criptomoeda até a última transação;
+- **current_price** referente a cotação da criptomoeda no momento da consulta;
+- **24h_change** referente a variação percentual na cotação da criptomoeda;
+- **current_position** referente ao valor da posição do usuário no momento da consulta;
+- **profit** referente ao lucro ou prejuízo da posição do usuário no momento da consulta.
+
 
 ```json
 [
@@ -322,6 +337,8 @@ GET https://criptofacil-deploy.herokuapp.com/api/portfolio/list
   }
 ]
 ```
+
+
 
 ## Accounting
 
@@ -357,6 +374,8 @@ A resposta será em formato JSON e trará uma lista com todos os meses do ano co
 }
 
 ```
+
+
 
 ## Chart
 
