@@ -331,7 +331,7 @@ Este endpoint irá retornar a tabela de informações referentes a declaração 
 
 ```markdown
 GET https://criptofacil-deploy.herokuapp.com/api/accounting
-
+```
 ### Response Format
 
 ```json
