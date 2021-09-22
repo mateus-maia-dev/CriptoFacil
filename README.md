@@ -41,7 +41,7 @@ POST https://criptofacil-deploy.herokuapp.com/api/register
 
 ```json
 {
-	"id": "<id>"
+	"id": "<id>",
 	"name": "<nome>",
 	"last_name": "<sobrenome>",
 	"email": "<nome@mail.com>"
