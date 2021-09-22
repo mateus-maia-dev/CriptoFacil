@@ -3,10 +3,18 @@
 Esta aplicação irá fazer a consolidação de investimentos em criptomoedas facilitando o controle de da rentabilidade de suas posições e realizando os cálculos necessários para as obrigações tributárias.
 
 ### Para rodar a aplicação
+#### Instalação das dependêncas
 - `python -m venv venv`
 - `source venv/bin/activate`
 - `pip install -r requirements.txt`
 - `flask run`
+#### Criando o arquivo .env
+Essa aplicação utiliza-se de banco de dados relacional através do gerenciador de bancos PostgreSQL. Logo, o exemplo dado para a configuração será no caso do seu uso.
+- crie um arquivo `.env` - `touch .env`
+- copie toda a informação de `.env.example` para `.env` - `cp .env.example .env`
+- informe dentre os tipos `test`;`development`;`production` a variável FLASK_ENV
+- preencha as informações referentes ao banco de dados utilizado.
+- preencha com a JWT_SECRET_KEY, usada para codificar e decodificar tokens gerados com jwt
 
 ### Para rodar os testes de integração
 - `pytest`
