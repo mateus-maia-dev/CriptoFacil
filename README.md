@@ -10,9 +10,9 @@ Esta aplicação irá fazer a consolidação de investimentos em criptomoedas fa
 - `flask run`
 #### Criando o arquivo .env
 Essa aplicação utiliza-se de banco de dados relacional através do gerenciador de bancos PostgreSQL. Logo, o exemplo dado para a configuração será no caso do seu uso.
-- crie um arquivo `.env` - `touch .env`
-- copie toda a informação de `.env.example` para `.env` - `cp .env.example .env`
-- informe dentre os tipos `test`;`development`;`production` a variável FLASK_ENV
+- crie um arquivo .env - `touch .env`
+- copie toda a informação de .env.example para `.env` - `cp .env.example .env`
+- informe dentre os tipos test, development ou production, a variável FLASK_ENV
 - preencha as informações referentes ao banco de dados utilizado.
 - preencha com a JWT_SECRET_KEY, usada para codificar e decodificar tokens gerados com jwt
 
